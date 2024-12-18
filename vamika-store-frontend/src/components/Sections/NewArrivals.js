@@ -6,7 +6,7 @@ import Shirts from '../../assets/img/shirts.jpg'
 import Tshirt from '../../assets/img/tshirts.jpeg'
 import dresses from '../../assets/img/dresses.jpg'
 import Carousel from 'react-multi-carousel';
-import { responsive } from '../../utils/Section.constants';
+import { responsive } from '../../utils/Section.constants'
 import './NewArrivals.css';
 
 const items = [{
@@ -38,23 +38,30 @@ const items = [{
 const NewArrivals = () => {
   return (
     <>
-    <SectionHeading title='New Arrivals'/>
+    <SectionHeading title={'New Arrivals'}/>
     <Carousel
-        responsive={responsive}
-        autoPlay={false}
-        swipeable={true}
-        draggable={false}
-        showDots={false}
-        infinite={false}
-        partialVisible={false}
-        itemClass={'react-slider-custom-item'}
-        className='px-8'
+      
+      responsive={responsive}
+      infinite={false}
+      autoPlay={false}
+      swipeable={true}
+      draggable={false}
+      showDots={false}
+      partialVisbile={false}
+      itemClass={'react-slider-custom-item'}
+      className='px-2'
       >
         {items && items?.map((item,index)=> <Card key={items?.title +index} title={item.title} imagePath={item.imagePath}/>)}
-        
-      </Carousel>
+    </Carousel>
     </>
   )
+}
+SectionHeading.defaultProps = {
+
+}
+
+SectionHeading.prototype= {
+  title:String
 }
 
 export default NewArrivals
