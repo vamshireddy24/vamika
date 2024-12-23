@@ -2,6 +2,7 @@ import React from 'react'
 import Wishlist from '../common/Wishlist'
 import AccountIcon from '../common/AccountIcon'
 import CartIcon from '../common/CartIcon'
+import { Link, NavLink } from 'react-router-dom'
 
 const Navigation = () => {
   return (
@@ -13,10 +14,10 @@ const Navigation = () => {
     <div className='flex flex-wrap items-center gap-10'>
         {/* Nav Items */}
         <ul className='flex gap-14 text-gray-800 hover:text-black'>
-            <li className=''><a href="/">shop</a></li>
-            <li className=''><a href="/">Men</a></li>
-            <li className=''><a href="/">Women</a></li>
-            <li className=''><a href="/">Kids</a></li>
+            <li><NavLink to="/" className={({isActive})=> isActive ? 'active-link':''}>shop</NavLink></li>
+            <li><NavLink to="/men" className={({isActive})=> isActive ? 'active-link':''}>Men</NavLink></li>
+            <li><NavLink to="/women"className={({isActive})=> isActive ? 'active-link':''}>Women</NavLink></li>
+            <li><NavLink to="/kids" className={({isActive})=> isActive ? 'active-link':''}>Kids</NavLink></li>
         </ul>
     </div>
     <div className='flex justify-centerb'>
@@ -34,7 +35,7 @@ const Navigation = () => {
         <ul className='flex gap-8'>
             <li><button><Wishlist/></button></li>
             <li><button><AccountIcon/></button></li>
-            <li><button><CartIcon/></button></li>
+            <li><Link to='/cart-items'><CartIcon/></Link></li>
         </ul>
     </div>
     </nav>
