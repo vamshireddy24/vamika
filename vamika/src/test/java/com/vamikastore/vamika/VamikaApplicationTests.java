@@ -1,10 +1,10 @@
-package net.vamika.vamika_store;
+package com.vamikastore.vamika;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class VamikaStoreBackendApplicationTests {
+class VamikaApplicationTests {
 
 	@Test
 	void contextLoads() {

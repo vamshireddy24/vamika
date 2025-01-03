@@ -1,13 +1,13 @@
-package net.vamika.vamika_store;
+package com.vamikastore.vamika;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class VamikaStoreBackendApplication {
+public class VamikaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(VamikaStoreBackendApplication.class, args);
+		SpringApplication.run(VamikaApplication.class, args);
 	}
 
 }
