@@ -10,5 +10,4 @@ import java.util.jar.JarEntry;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
-
 }

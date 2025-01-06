@@ -8,14 +8,19 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ProductServiceImpl {
+public class ProductServiceImpl implements ProductService {
+
+    private final ProductRepository productRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    private ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     public Product addProduct(Product product) {
-        return null;
+        return productRepository.save(product);
     }
+
 
     public List<Product> getAllProducts() {
         List<Product> products = productRepository.findAll();
