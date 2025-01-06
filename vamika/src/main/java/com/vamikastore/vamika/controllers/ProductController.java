@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -31,7 +31,8 @@ public class ProductController {
 
     // create Product
     @PostMapping
-    public ProductDto createProduct(@RequestBody Product product){
+    public ResponseEntity<Product> createProduct(@RequestBody Product productDto){
+        Product product = productService.addProduct(productDto);
         return null;
     }
 }
