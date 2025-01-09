@@ -1,5 +1,6 @@
 package com.vamikastore.vamika.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +35,7 @@ public class Resources {
 
     @ManyToOne
     @JoinColumn(name = "product_id",nullable = false)
+    @JsonIgnore
     private Product product;
 
 }

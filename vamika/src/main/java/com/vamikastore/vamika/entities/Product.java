@@ -2,6 +2,7 @@ package com.vamikastore.vamika.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,8 +36,11 @@ public class Product {
     @Column(nullable = false)
     private String brand;
 
+    @Column
+    private Float rating;
+
     @Column(nullable = false)
-    private boolean isNewArrival;
+    private Boolean isNewArrival;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -49,12 +53,13 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductVariant> productVariants;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id",nullable = false)
     @JsonIgnore
+    @NotNull
     private Category category;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoryType_id",nullable = false)
     @JsonIgnore
     private CategoryType categoryType;

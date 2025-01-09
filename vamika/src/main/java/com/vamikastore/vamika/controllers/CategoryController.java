@@ -23,17 +23,23 @@ public class CategoryController {
         Category category = categoryService.getCategory(categoryId);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
+    
+    @GetMapping
+    public  ResponseEntity<List<Category>> getAllCategories(){
+        List<Category> categoryList = categoryService.getAllCategory();
+        return new ResponseEntity<>(categoryList, HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<Category> createCategory(@RequestBody CategoryDto categoryDto){
         Category category = categoryService.createCategory(categoryDto);
         return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@RequestBody CategoryDto categoryDto, @PathVariable(value= "id", required = true) UUID categoryId){
         Category updatedCategory = categoryService.updateCategory(categoryDto, categoryId);
         return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
-
     }
 
     @DeleteMapping("/{id}")

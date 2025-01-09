@@ -1,42 +1,100 @@
 package com.vamikastore.vamika.services;
 
 import com.vamikastore.vamika.dto.ProductDto;
-import com.vamikastore.vamika.entities.Product;
+import com.vamikastore.vamika.dto.ProductResourceDto;
+import com.vamikastore.vamika.dto.ProductVariantDto;
+import com.vamikastore.vamika.entities.*;
 import com.vamikastore.vamika.repositories.ProductRepository;
+import com.vamikastore.vamika.specification.ProductSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Autowired
     private ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
+    @Autowired
+    private CategoryService categoryService;
+
     @Override
-    public Product addProduct(Product product) {
+    public Product addProduct(ProductDto productDto) {
+        Product product = mapToProductEntity(productDto);
         return productRepository.save(product);
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-//            To-do mapping of products into productDto
+    public List<Product> getAllProducts(UUID categoryId, UUID typeId) {
+
+        Specification<Product> productSpecification = Specification.where(null);
+
+        if (null != categoryId){
+            productSpecification = productSpecification.and(ProductSpecification.hasCategoryId(categoryId));
+        }
+        if (null != typeId){
+            productSpecification = productSpecification.and(ProductSpecification.hasCategoryTypeId(typeId));
+        }
+        List<Product> products = productRepository.findAll(productSpecification);
+        /* To-do mapping of products into productDto */
         return products;
     }
-    private Product createProduct(ProductDto productDto){
+    private Product mapToProductEntity(ProductDto productDto){
         Product product = new Product();
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setBrand(productDto.getBrand());
-        product.setNewArrival(productDto.isNewArrival());
+        product.setIsNewArrival(productDto.getIsNewArrival());
         product.setPrice(productDto.getPrice());
+        product.setRating(productDto.getRating());
 
-        return product;
+        Category category = categoryService.getCategory(productDto.getCategoryId());
+        if(null != category) {
+            product.setCategory(category);
+            UUID categoryTypeId = productDto.getCategoryTypeId();
+            CategoryType categoryType = category.getCategoryTypes().stream().filter(categoryType1 -> categoryType1.getId().equals(categoryTypeId)).findFirst().orElse(null);
+            product.setCategoryType(categoryType);
+        }
+        if (null != productDto.getVariants()){
+            product.setProductVariants(mapToProductVariant(productDto.getVariants(),product));
+        }
+
+        if (null != productDto.getProductResources()){
+           product.setResources(mapToProductResources(productDto.getProductResources(),product));
+        }
+
+        return productRepository.save(product);
+    }
+
+    private List<Resources> mapToProductResources(List<ProductResourceDto> productResources, Product product) {
+
+        return productResources.stream().map(productResourceDto -> {
+            Resources resources = new Resources();
+            resources.setName(productResourceDto.getName());
+            resources.setType(productResourceDto.getType());
+            resources.setUrl(productResourceDto.getUrl());
+            resources.setIsPrimary(productResourceDto.getIsPrimary());
+            return resources;
+        }).collect(Collectors.toList());
+    }
+
+    private List<ProductVariant> mapToProductVariant(List<ProductVariantDto> productVariantDtos, Product product){
+        return productVariantDtos.stream().map(productVariantDto -> {
+            ProductVariant productVariant = new ProductVariant();
+            productVariant.setColor(productVariantDto.getColor());
+            productVariant.setSize(productVariantDto.getSize());
+            productVariant.setStockQuantity(productVariantDto.getStockQuantity());
+            productVariant.setProduct(product);
+            return productVariant;
+        }).collect(Collectors.toList());
     }
 }

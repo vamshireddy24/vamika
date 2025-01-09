@@ -35,13 +35,13 @@ public class CategoryService {
 
     private Category mapToEntity(CategoryDto categoryDto){
         Category category = Category.builder()
-                .code(categoryDto.getCode())
                 .name(categoryDto.getName())
+                .code(categoryDto.getCode())
                 .description(categoryDto.getDescription())
                 .build();
 
-        if(null != categoryDto.getCategoryTypes()){
-            List<CategoryType> categoryTypes = mapToCategoryTypesList(categoryDto.getCategoryTypes(), category);
+        if(null != categoryDto.getCategoryTypeList()){
+            List<CategoryType> categoryTypes = mapToCategoryTypesList(categoryDto.getCategoryTypeList(), category);
             category.setCategoryTypes(categoryTypes);
         }
         return category;
@@ -50,8 +50,8 @@ public class CategoryService {
     private List<CategoryType> mapToCategoryTypesList(List<CategoryTypeDto> categoryTypeList, Category category) {
         return categoryTypeList.stream().map(categoryTypeDto -> {
             CategoryType categoryType = new CategoryType();
-            categoryType.setCode(categoryTypeDto.getCode());
             categoryType.setName(categoryType.getName());
+            categoryType.setCode(categoryTypeDto.getCode());
             categoryType.setDescription(categoryTypeDto.getDescription());
             categoryType.setCategory(category);
             return categoryType;
@@ -79,18 +79,22 @@ public class CategoryService {
         List<CategoryType> existing = category.getCategoryTypes();
         List<CategoryType> list= new ArrayList<>();
 
-        if(categoryDto.getCategoryTypes() != null){
-           categoryDto.getCategoryTypes().forEach(categoryTypeDto -> {
-               if (null != categoryTypeDto.getId()) {
+        if(categoryDto.getCategoryTypeList() != null){
+           categoryDto.getCategoryTypeList().forEach(categoryTypeDto -> {
+               if (categoryTypeDto.getId() != null) {
                    Optional<CategoryType> categoryType = existing.stream().filter(t -> t.getId().equals(categoryTypeDto.getId())).findFirst();
-                   CategoryType categoryType1 = categoryType.get();
-                   categoryType1.setCode(categoryTypeDto.getCode());
-                   categoryType1.setDescription(categoryTypeDto.getDescription());
-                   list.add(categoryType1);
-               } else {
+                   if (categoryType.isPresent()) {
+                       CategoryType categoryType1 = categoryType.get();
+                       categoryType1.setName(categoryTypeDto.getName());
+                       categoryType1.setCode(categoryTypeDto.getCode());
+                       categoryType1.setDescription(categoryTypeDto.getDescription());
+                       list.add(categoryType1);
+                   }
+               }
+               else {
                    CategoryType categoryType = new CategoryType();
+                   categoryType.setName(categoryTypeDto.getName());
                    categoryType.setCode(categoryTypeDto.getCode());
-                   categoryType.setName(categoryType.getName());
                    categoryType.setDescription(categoryTypeDto.getDescription());
                    categoryType.setCategory(category);
                    list.add(categoryType);

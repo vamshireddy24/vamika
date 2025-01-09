@@ -17,7 +17,5 @@ public class ProductResourceDto {
     private String name;
     private String url;
     private String type;
-    private boolean isNewArrival;
-    private UUID categoryId;
-    private UUID categoryTypeId;
+    private Boolean isPrimary;
 }
