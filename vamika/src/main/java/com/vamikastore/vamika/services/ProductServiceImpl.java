@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    @Autowired
     private ProductRepository productRepository;
 
     @Autowired
@@ -44,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
         if (null != typeId){
             productSpecification = productSpecification.and(ProductSpecification.hasCategoryTypeId(typeId));
         }
+
         List<Product> products = productRepository.findAll(productSpecification);
         /* To-do mapping of products into productDto */
         return products;
@@ -83,6 +85,7 @@ public class ProductServiceImpl implements ProductService {
             resources.setType(productResourceDto.getType());
             resources.setUrl(productResourceDto.getUrl());
             resources.setIsPrimary(productResourceDto.getIsPrimary());
+            resources.setProduct(product);
             return resources;
         }).collect(Collectors.toList());
     }
