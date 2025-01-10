@@ -31,10 +31,12 @@ public class ProductMapper {
         product.setPrice(productDto.getPrice());
         product.setRating(productDto.getRating());
         product.setSlug(productDto.getSlug());
+
         Category category = categoryService.getCategory(productDto.getCategoryId());
         if(null != category) {
             product.setCategory(category);
             UUID categoryTypeId = productDto.getCategoryTypeId();
+
             CategoryType categoryType = category.getCategoryTypes().stream().filter(categoryType1 -> categoryType1.getId().equals(categoryTypeId)).findFirst().orElse(null);
             product.setCategoryType(categoryType);
         }
@@ -60,6 +62,7 @@ public class ProductMapper {
             resources.setType(productResourceDto.getType());
             resources.setUrl(productResourceDto.getUrl());
             resources.setIsPrimary(productResourceDto.getIsPrimary());
+            resources.setProduct(product);
             return resources;
         }).collect(Collectors.toList());
     }
@@ -79,10 +82,11 @@ public class ProductMapper {
     }
 
     public List<ProductDto> getProductDtos(List<Product> products) {
-        return products.stream().map(this::mapProductToDtos).toList();
+        return products.stream().map(this::mapProductToDto).toList();
     }
 
-    public ProductDto mapProductToDtos(Product product) {
+    public ProductDto mapProductToDto(Product product) {
+
         return ProductDto.builder()
                 .id(product.getId())
                 .brand(product.getBrand())

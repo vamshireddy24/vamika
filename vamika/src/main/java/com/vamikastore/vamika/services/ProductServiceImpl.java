@@ -58,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
         if (null == product){
             throw new ResourceNotFoundEx("Product Not Found");
         }
-        ProductDto productDto = productMapper.mapProductToDtos(product);
+        ProductDto productDto = productMapper.mapProductToDto(product);
         productDto.setCategoryId(product.getCategory().getId());
         productDto.setCategoryTypeId(product.getCategoryType().getId());
         productDto.setVariants(productMapper.mapProductVariantListToDto(product.getProductVariants()));
@@ -69,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto getProductById(UUID id) {
         Product product = productRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEx("Product Not Found"));
-        ProductDto productDto = productMapper.mapProductToDtos(product);
+        ProductDto productDto = productMapper.mapProductToDto(product);
         productDto.setCategoryId(product.getCategory().getId());
         productDto.setCategoryTypeId(product.getCategoryType().getId());
         productDto.setVariants(productMapper.mapProductVariantListToDto(product.getProductVariants()));
