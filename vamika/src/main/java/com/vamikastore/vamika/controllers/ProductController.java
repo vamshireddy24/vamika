@@ -4,14 +4,12 @@ import com.vamikastore.vamika.dto.ProductDto;
 import com.vamikastore.vamika.entities.Product;
 import com.vamikastore.vamika.services.ProductService;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +18,7 @@ import java.util.UUID;
 @CrossOrigin
 public class ProductController {
 
-    private final ProductService productService;
+    private ProductService productService;
 
     @Autowired
     public ProductController(ProductService productService) {

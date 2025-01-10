@@ -16,6 +16,7 @@ import java.util.UUID;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    @Autowired
     private ProductRepository productRepository;
 
     @Autowired
@@ -46,6 +47,7 @@ public class ProductServiceImpl implements ProductService {
         if (null != typeId){
             productSpecification = productSpecification.and(ProductSpecification.hasCategoryTypeId(typeId));
         }
+
         List<Product> products = productRepository.findAll(productSpecification);
         return productMapper.getProductDtos(products);
     }
