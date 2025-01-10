@@ -8,6 +8,6 @@ const SectionHeading = ({title}) => {
       <p className='text-2xl'>{title}</p>
     </div>
   )
-
 }
+
 export default SectionHeading

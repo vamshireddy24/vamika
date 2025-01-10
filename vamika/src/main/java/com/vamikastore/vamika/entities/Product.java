@@ -2,7 +2,6 @@ package com.vamikastore.vamika.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,6 +41,9 @@ public class Product {
     @Column(nullable = false)
     private Boolean isNewArrival;
 
+    @Column(nullable = false, unique = true)
+    private String slug;
+
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private java.util.Date createdAt;
@@ -56,7 +58,6 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id",nullable = false)
     @JsonIgnore
-    @NotNull
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)

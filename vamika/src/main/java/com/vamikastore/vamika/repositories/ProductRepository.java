@@ -11,4 +11,5 @@ import java.util.jar.JarEntry;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpecificationExecutor<Product> {
 
+    Product findBySlug(String slug);
 }

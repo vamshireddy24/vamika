@@ -41,7 +41,7 @@ public class CategoryService {
                 .build();
 
         if(null != categoryDto.getCategoryTypeList()){
-            List<CategoryType> categoryTypes = mapToCategoryTypesList(categoryDto.getCategoryTypeList(), category);
+            List<CategoryType> categoryTypes = mapToCategoryTypesList(categoryDto.getCategoryTypeList(),category);
             category.setCategoryTypes(categoryTypes);
         }
         return category;
@@ -50,7 +50,7 @@ public class CategoryService {
     private List<CategoryType> mapToCategoryTypesList(List<CategoryTypeDto> categoryTypeList, Category category) {
         return categoryTypeList.stream().map(categoryTypeDto -> {
             CategoryType categoryType = new CategoryType();
-            categoryType.setName(categoryType.getName());
+            categoryType.setName(categoryTypeDto.getName());
             categoryType.setCode(categoryTypeDto.getCode());
             categoryType.setDescription(categoryTypeDto.getDescription());
             categoryType.setCategory(category);

@@ -56,12 +56,4 @@ const NewArrivals = () => {
     </>
   )
 }
-SectionHeading.defaultProps = {
-
-}
-
-SectionHeading.prototype= {
-  title:String
-}
-
 export default NewArrivals
