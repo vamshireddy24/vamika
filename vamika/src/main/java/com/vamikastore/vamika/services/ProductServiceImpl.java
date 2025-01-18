@@ -19,10 +19,10 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    @Autowired
-    private ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+//    @Autowired
+//    private ProductServiceImpl(ProductRepository productRepository) {
+//        this.productRepository = productRepository;
+//    }
 
     @Autowired
     private CategoryService categoryService;
