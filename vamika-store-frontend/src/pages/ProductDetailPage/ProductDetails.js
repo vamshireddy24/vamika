@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useLoaderData, useParams } from 'react-router-dom'
 import Breadcrumb from '../../components/Breadcrumb.js/Breadcrumb';
 import content from '../../data/content.json'
@@ -11,6 +11,10 @@ import SvgShipping from '../../components/common/SvgShipping';
 import SvgReturn from '../../components/common/SvgReturn';
 import SectionHeading from '../../components/Sections/SectionHeading/SectionHeading';
 import ProductCard from '../ProductListPage/ProductCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../../store/features/cart';
+import _ from 'lodash';
+import { getAllProducts } from '../../api/fetchProducts';
 
 const breadCrumbLinks = [
   { title: 'Home', path: '/' }
@@ -41,32 +45,56 @@ const ProductDetails = () => {
   const { product } = useLoaderData();
   const [image, setImage] = useState();
   const [breadCrumbLinks, setBreadCrumbLink] = useState([]);
-
-  const similarProducts = useMemo(()=>{
-    return content?.products?.filter((item)=> item?.type_id === product?.type_id && item?.id !== product?.id);
-  },[product]);
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cartState?.cart);
+  const [similarProducts,setSimilarProducts] = useState([]);
+  const Categories = useSelector((state) => state?.categoryState?.Categories);
 
   const productCategory = useMemo(() => {
-    return categories?.find((category) => category?.id === product?.category_id);
-  }, [product]);
+    return categories?.find((category) => category?.id === product?.categoryId);
+  }, [product,categories]);
+
+  useEffect(()=>{
+    getAllProducts(product?.categoryId,product?.categoryTypeId).then(res=>{
+      const excludedProduct = res?.filter((item)=> item?.id !== product?.id);
+      setSimilarProducts(res);
+    }).catch(()=>[
+      
+    ])
+  },[product?.categoryId, product?.categoryTypeId]);
 
   useEffect(() => {
-    setImage(product?.images[0]?.startsWith('http') ? product?.images[0] : product?.thumbnail)
+    setImage(product?.thumbnail)
     setBreadCrumbLink({});
     const arrayLinks = [{ title: 'Home', path: '/' }, {
       title: productCategory?.name,
-      path: productCategory?.path
+      path: productCategory?.name
     }];
-    const productType = productCategory?.types?.find((item) => item?.type_id === product?.type_id);
-    console.log("product type", productType, productCategory);
-    if (productType) {
+    const productType = productCategory?.categoryTypes?.find((item) => item?.id === product?.categoryTypeId);
+
+    if(productType){
       arrayLinks?.push({
         title: productType?.name,
         path: productType?.name
       })
     }
-    setBreadCrumbLink([...breadCrumbLinks, ...arrayLinks]);
-  }, [productCategory, product])
+  
+    setBreadCrumbLink([arrayLinks]);
+  }, [productCategory, product]);
+
+  const addItemTOCart = useCallback(()=>{
+
+  },[]);
+
+  const colors = useMemo(()=>{
+    const colorSet = _.uniq(_.map(product?.variants,'color'));
+    return colorSet
+  },[product]);
+
+  const sizes = useMemo(()=>{
+    const sizeSet = _.uniq(_.map(product?.variants,'size'));
+    return sizeSet
+  },[product]);
 
   return (
     <>
@@ -78,22 +106,22 @@ const ProductDetails = () => {
               {/* Stack Images */}
               <div className='flex flex-row md:flex-col justify-center h-full'>
                 {
-                  product?.images[0]?.startsWith('http') && product?.images?.map((item, index) => (
-                    <button key={index} onClick={() => setImage(item)} className='rounded-lg w-fit p-2 mb-2'><img src={item} className='h-[60px] w-[60px] rounded-lg bg-cover bg-center p-2 hover:scale-105 hover:border' alt={'sample-' + index} /></button>
+                  product?.productResources?.map((item, index) => (
+                    <button key={index} onClick={() => setImage(item?.url)} className='rounded-lg w-fit p-2 mb-2'><img src={item?.url} className='h-[60px] w-[60px] rounded-lg bg-cover bg-center p-2 hover:scale-105 hover:border' alt={'sample-' + index} /></button>
                   ))
                 }
               </div>
             </div>
             <div className='w-full md:w-[80%] flex justify-center md:pt-0 pt-10'>
               <img src={image} className='h-full w-full max-h-[520px]
-            border rounded-lg cursor-pointer object-cover' alt={product?.title} />
+            border rounded-lg cursor-pointer object-cover' alt={product?.name} />
             </div>
           </div>
         </div>
         <div className='w-[60%] px-10'>
           {/* Product Description */}
           <Breadcrumb links={breadCrumbLinks} />
-          <p className='text-3xl pt-2'>{product?.title}</p>
+          <p className='text-3xl pt-4'>{product?.name}</p>
           <Rating rating={product?.rating} />
           {/* Price Tag */}
           <p className='text-xl bold py-2'>${product?.price}</p>
@@ -103,10 +131,10 @@ const ProductDetails = () => {
               <Link className='text-sm text-gray-500 hover:text-gray-900' to={'https://en.wikipedia.org/wiki/Clothing_sizes'} target='_blank'>{'Size Guide ->'}</Link>
             </div>
           </div>
-          <div className='mt-2'><SizeFilter sizes={product?.size} hidleTitle /></div>
+          <div className='mt-2'><SizeFilter sizes={sizes} hidleTitle multi={false}/></div>
           <div>
             <p className='text-lg bold'>Colors Available</p>
-            <ProductColors colors={product?.color} />
+            <ProductColors colors={colors} />
           </div>
           <div className='flex py-6'>
             <button className='bg-black rounded-lg hover:bg-gray-700'><div className='flex h-[42px] rounded-lg w-[150px] px-2 items-center justify-center bg-black text-white hover:bg-gray-700'><svg width="17" height="16" className='' viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">

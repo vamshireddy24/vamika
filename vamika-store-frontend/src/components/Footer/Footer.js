@@ -8,9 +8,9 @@ const Footer = ({content}) => {
       <div className='flex p-8 justify-around'>
         {content?.items && content?.items?.map((item,index)=>{
             return (
-                <div className='flex flex-col'>
+                <div key={index} className='flex flex-col'>
                 <p className='text-[16px] pb-[10px]'>{item?.title}</p>
-                {item?.list && item?.list?.map((listItem,index)=><a className='flex flex-col text-[12px] py-2' 
+                {item?.list && item?.list?.map((listItem,index)=><a key={index} className='flex flex-col text-[12px] py-2' 
                 href={listItem?.path}>{listItem?.label}</a>)}
                 {item?.description && <p>{item?.description}</p>}
                 </div>

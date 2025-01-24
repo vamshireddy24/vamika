@@ -1,4 +1,4 @@
-import React, { use, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import FilterIcon from '../../components/common/FilterIcon';
 import content from '../../data/content.json'
 import Categories from '../../components/Filters/Categories'
@@ -31,15 +31,19 @@ const ProductListPage = ({categoryType}) => {
   },[categoryData, categoryType]);
 
   useEffect(()=>{
+    if (category?.id) {
     dispatch(setLoading(true));
-    getAllProducts(category?.id).then(res =>{
+    getAllProducts(category?.id).then(res=>{
       setProducts(res);
     }).catch(err=> {
-
+      console.error(err);
     }).finally(()=>{
       dispatch(setLoading(false));
-    })
-  },[category?.id, dispatch])
+    });
+    }else {
+      console.error('Error: categoryId is undefined or null');
+    }
+  },[category?.id, dispatch]);
 
   return (
     <div>

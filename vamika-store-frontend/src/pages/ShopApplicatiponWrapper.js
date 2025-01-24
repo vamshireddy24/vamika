@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 
 const ShopApplicatiponWrapper = () => {
 
-  const isLoading = useSelector((state) => state?.commonState?.loading);
+  const isLoading = useSelector((state)=> state?.commonState?.loading);
   return (
     <div>
       <Navigation />

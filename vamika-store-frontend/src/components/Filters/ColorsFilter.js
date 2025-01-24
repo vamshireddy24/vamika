@@ -33,9 +33,9 @@ const ColorsFilter = ({ colors }) => {
         <div className='flex flex-col mb-4'>
             <p className='text-[16px] text-black mt-5 mb-5'>Colors</p>
             <div className='flex flex-wrap p-4'>
-                {colors?.map(item => {
+                {colors?.map((item, index) => {
                     return (
-                        <div className='flex flex-col mr-2 cursor-pointer hover:outline-2 hover:scale-105'>
+                        <div key={index} className='flex flex-col mr-2 cursor-pointer hover:outline-2 hover:scale-105'>
                             <div className='w-8 h-8 border rounded-lg mr-4' onClick={() => onClickDiv(item)} style={{ background: `${colorSelector[item]}` }}></div>
                             <p className='text-sm text-gray-400 mb-2' style={{ color: `${appliedColors?.includes(item) ? 'black' : ''}` }}>{item}</p>
                         </div>
