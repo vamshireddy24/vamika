@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 
-const colorSelector = {
+export const colorSelector = {
     "Purple": "#8434E1",
     "Black": "#252525",
     "White": "#FFFFFF",
@@ -19,7 +19,6 @@ const ColorsFilter = ({ colors }) => {
 
     const [appliedColors, setAppliedColors] = useState([]);
     const onClickDiv = useCallback((item) => {
-        console.log("item", item)
         if (appliedColors.indexOf(item) > -1) {
 
             setAppliedColors(appliedColors?.filter(color => color !== item));
@@ -36,7 +35,10 @@ const ColorsFilter = ({ colors }) => {
                 {colors?.map((item, index) => {
                     return (
                         <div key={index} className='flex flex-col mr-2 cursor-pointer hover:outline-2 hover:scale-105'>
-                            <div className='w-8 h-8 border rounded-lg mr-4' onClick={() => onClickDiv(item)} style={{ background: `${colorSelector[item]}` }}></div>
+                            <div className='w-8 h-8 border rounded-lg mr-4' 
+                            onClick={() => onClickDiv(item)} 
+                            style={{ background: `${colorSelector[item]}` }}>
+                            </div>
                             <p className='text-sm text-gray-400 mb-2' style={{ color: `${appliedColors?.includes(item) ? 'black' : ''}` }}>{item}</p>
                         </div>
                     )

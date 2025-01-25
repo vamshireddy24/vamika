@@ -4,7 +4,8 @@ import SvgEmptyStar from '../common/SvgEmptyStar';
 
 const Rating = ({rating}) => {
   const ratingNumber = useMemo(()=>{
-    return Array(Math.floor(Number(rating))).fill()
+    const validRating = isNaN(Number(rating)) || Number(rating) < 0 ? 0 : Math.min(5, Math.floor(Number(rating)));
+    return new Array(validRating).fill(); 
   },[rating]);
   return (
     <div className='flex items-center'>
@@ -12,7 +13,7 @@ const Rating = ({rating}) => {
         <SvgStarIcon key={index}/>
       ))}
       {
-        Array(5-ratingNumber?.length).fill().map((_,index)=>(
+       new Array(5-ratingNumber?.length).fill().map((_,index)=>(
             <SvgEmptyStar key={'empty'+index}/>
         ))
       }

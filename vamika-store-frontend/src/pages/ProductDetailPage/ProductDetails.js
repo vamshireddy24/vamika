@@ -16,11 +16,11 @@ import { addToCart } from '../../store/features/cart';
 import _ from 'lodash';
 import { getAllProducts } from '../../api/fetchProducts';
 
-const breadCrumbLinks = [
-  { title: 'Home', path: '/' }
-]
+// const breadCrumbLinks = [
+//   { title: 'Home', path: '/' }
+// ]
 
-const categories = content?.categories;
+// const categories = content?.categories;
 
 const extraSections = [
   {
@@ -48,29 +48,43 @@ const ProductDetails = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cartState?.cart);
   const [similarProducts,setSimilarProducts] = useState([]);
-  const Categories = useSelector((state) => state?.categoryState?.Categories);
+  const categories = useSelector((state) => state?.categoryState?.categories);
+  const [selectSize,setSelectedSize] = useState('');
+  const [error,setError] = useState('');
 
   const productCategory = useMemo(() => {
     return categories?.find((category) => category?.id === product?.categoryId);
   }, [product,categories]);
 
-  useEffect(()=>{
-    getAllProducts(product?.categoryId,product?.categoryTypeId).then(res=>{
-      const excludedProduct = res?.filter((item)=> item?.id !== product?.id);
-      setSimilarProducts(res);
-    }).catch(()=>[
-      
-    ])
-  },[product?.categoryId, product?.categoryTypeId]);
+  useEffect(() => {
+    if (!product?.categoryId) {
+      setError('Category ID is missing. Cannot load similar products.');
+      return;
+    }
+
+    getAllProducts(product?.categoryId, product?.categoryTypeId)
+      .then(res => {
+        const excludedProduct = res?.filter(item => item?.id !== product?.id);
+        setSimilarProducts(excludedProduct);
+      })
+      .catch(() => {
+        setError('Failed to fetch similar products');
+      });
+  }, [product]);
 
   useEffect(() => {
     setImage(product?.thumbnail)
     setBreadCrumbLink({});
-    const arrayLinks = [{ title: 'Home', path: '/' }, {
+    const arrayLinks = [
+      { title: 'Home', path: '/' }, 
+      {
       title: productCategory?.name,
       path: productCategory?.name
-    }];
-    const productType = productCategory?.categoryTypes?.find((item) => item?.id === product?.categoryTypeId);
+      }
+    ];
+    const productType = productCategory?.categoryTypes?.find(
+      (item) => item?.id === product?.categoryTypeId
+    );
 
     if(productType){
       arrayLinks?.push({
@@ -78,7 +92,6 @@ const ProductDetails = () => {
         path: productType?.name
       })
     }
-  
     setBreadCrumbLink([arrayLinks]);
   }, [productCategory, product]);
 
@@ -86,6 +99,12 @@ const ProductDetails = () => {
 
   },[]);
 
+  useEffect(()=>{
+    if(selectSize){
+      setError('');
+    }
+  },[selectSize]);
+  
   const colors = useMemo(()=>{
     const colorSet = _.uniq(_.map(product?.variants,'color'));
     return colorSet
@@ -106,8 +125,10 @@ const ProductDetails = () => {
               {/* Stack Images */}
               <div className='flex flex-row md:flex-col justify-center h-full'>
                 {
-                  product?.productResources?.map((item, index) => (
-                    <button key={index} onClick={() => setImage(item?.url)} className='rounded-lg w-fit p-2 mb-2'><img src={item?.url} className='h-[60px] w-[60px] rounded-lg bg-cover bg-center p-2 hover:scale-105 hover:border' alt={'sample-' + index} /></button>
+                  product?.productResources?.map((item) => (
+                    <button key={item?.url} onClick={() => setImage(item?.url)} className='rounded-lg w-fit p-2 mb-2'>
+                      <img src={item?.url} className='h-[60px] w-[60px] rounded-lg bg-cover bg-center p-2 hover:scale-105 hover:border' alt={item?.url} />
+                    </button>
                   ))
                 }
               </div>
@@ -145,7 +166,7 @@ const ProductDetails = () => {
             {/* */}
             {
               extraSections?.map((section) => (
-                <div className='flex items-center'>
+                <div key={section?.label} className='flex items-center'>
                   {section?.icon}
                   <p className='px-2'>{section?.label}</p>
                 </div>
@@ -158,7 +179,7 @@ const ProductDetails = () => {
       {/* Product Description */}
       <SectionHeading title={'Product Description'} />
       <div className='md:w-[50%] w-full p-10'>
-        <p className='px-8'>{product.description}</p>
+        <p className='px-8'>{product?.description}</p>
       </div>
       
       <SectionHeading title={'Similar Products'} />

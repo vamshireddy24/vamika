@@ -6,6 +6,7 @@ import com.vamikastore.vamika.exceptions.ResourceNotFoundEx;
 import com.vamikastore.vamika.mapper.ProductMapper;
 import com.vamikastore.vamika.repositories.ProductRepository;
 import com.vamikastore.vamika.specification.ProductSpecification;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -78,9 +79,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(ProductDto productDto) {
-        Product product = productRepository.findById(productDto.getId()).orElseThrow(() -> new ResourceNotFoundEx("Product Not Found!"));
+    public Product updateProduct(ProductDto productDto, UUID id) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundEx("Product Not Found!"));
+        productDto.setId(product.getId());
         return productRepository.save(productMapper.mapToProductEntity(productDto));
+    }
+
+    @Override
+    public Product fetchProductById(UUID id) throws Exception {
+        return productRepository.findById(id).orElseThrow(BadRequestException::new);
     }
 
 }

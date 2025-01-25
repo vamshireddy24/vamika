@@ -14,7 +14,7 @@ const categories = content?.categories;
 
 const ProductListPage = ({categoryType}) => {
   
-  const categoryData = useSelector((state)=> state?.categoryState?.Categories);
+  const categoryData = useSelector((state)=> state?.categoryState?.categories);
   const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
 
@@ -31,7 +31,6 @@ const ProductListPage = ({categoryType}) => {
   },[categoryData, categoryType]);
 
   useEffect(()=>{
-    if (category?.id) {
     dispatch(setLoading(true));
     getAllProducts(category?.id).then(res=>{
       setProducts(res);
@@ -40,9 +39,7 @@ const ProductListPage = ({categoryType}) => {
     }).finally(()=>{
       dispatch(setLoading(false));
     });
-    }else {
-      console.error('Error: categoryId is undefined or null');
-    }
+
   },[category?.id, dispatch]);
 
   return (

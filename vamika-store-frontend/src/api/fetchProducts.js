@@ -2,14 +2,14 @@ import axios from "axios";
 import { API_BASE_URL, API_URLS } from "./constant"
 
 
-export const getAllProducts = async (Id, typeId) => {
+export const getAllProducts = async (id, typeId) => {
 
-    if (!Id) {
+    if (!id) {
         console.error('Error: categoryId is required');
         return;
     }
 
-    let url = API_BASE_URL + API_URLS.GET_PRODUCTS + `?categoryId=${Id}`;
+    let url = API_BASE_URL + API_URLS.GET_PRODUCTS + `?categoryId=${id}`;
     if(typeId){
         url += `&typeId=${typeId}`;
     }
