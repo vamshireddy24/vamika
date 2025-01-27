@@ -377,7 +377,7 @@
         "brand": "SummerVibes",
         "price": 39.99,
         "size": ["S", "M", "L"],
-        "color": ["Blue"],
+        "color": ["Blue","Gray"],
         "discount": 15,
         "images": ["shorts-denim1.jpg", "shorts-denim2.jpg"],
         "thumbnail": "https://codedev.b-cdn.net/products/shorts-denim.jpeg",
